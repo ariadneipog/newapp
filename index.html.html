@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+  input,button,textarea,select{font-family:inherit;}
+  button{cursor:pointer;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes pulseDim{0%,100%{opacity:1}50%{opacity:.45}}
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .scroll::-webkit-scrollbar{width:0;height:0}
+  .scroll{scrollbar-width:none;}
+</style>
+</helmet>
+
+<div style="min-height:100vh;width:100%;background:#E7E4DF;display:flex;align-items:center;justify-content:center;padding:28px 0;">
+  <div style="position:relative;width:414px;height:866px;background:#0d0d0d;border-radius:56px;padding:11px;box-shadow:0 50px 90px -30px rgba(40,20,20,.55),0 0 0 2px #2c2c2c;">
+    <div data-screen-label="App" style="position:relative;width:392px;height:844px;background:#F6F5F3;border-radius:46px;overflow:hidden;display:flex;flex-direction:column;">
+
+      <!-- ====== STATUS BAR ====== -->
+      <div style="position:relative;z-index:5;height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 9px;background:#FFFFFF;">
+        <span style="font-size:15px;font-weight:600;color:#1C1B1A;letter-spacing:-.01em;">9:41</span>
+        <div style="position:absolute;left:50%;top:9px;transform:translateX(-50%);width:108px;height:30px;background:#0d0d0d;border-radius:18px;"></div>
+        <div style="display:flex;align-items:center;gap:7px;color:#1C1B1A;">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="#1C1B1A"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.6" y="5" width="3" height="6" rx="1"/><rect x="9.2" y="2.6" width="3" height="8.4" rx="1"/><rect x="13.8" y="0" width="3" height="11" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="#1C1B1A"><path d="M8 2.1C5.2 2.1 2.7 3.1.8 4.9l1.4 1.5C3.8 5 5.8 4.1 8 4.1s4.2.9 5.8 2.3l1.4-1.5C13.3 3.1 10.8 2.1 8 2.1z"/><path d="M8 6.3c-1.5 0-2.9.6-3.9 1.6l1.5 1.5C6.3 8.8 7.1 8.5 8 8.5s1.7.3 2.4.9l1.5-1.5C10.9 6.9 9.5 6.3 8 6.3z"/><circle cx="8" cy="10.6" r="1.2"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#1C1B1A" stroke-opacity="0.35"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#1C1B1A"/><path d="M24.6 4.4c1 .3 1 3.9 0 4.2" stroke="#1C1B1A" stroke-opacity="0.4" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- ====== MAIN ====== -->
+      <div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;">
+
+        <!-- ============ LOGIN ============ -->
+        <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+          <div data-screen-label="Login" style="flex:1;min-height:0;background:#FFFFFF;display:flex;flex-direction:column;overflow-y:auto;" class="scroll">
+            <div style="flex:1;display:flex;flex-direction:column;padding:44px 28px 24px;">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:36px;">
+                <img src="assets/logo-ipog.webp" alt="IPOG" style="height:42px;width:auto;margin-bottom:18px;"/>
+                <p style="margin:0;font-size:14px;line-height:1.5;color:#6B6A67;max-width:250px;">Use seu <b style="color:#46443f;font-weight:600;">CPF</b> e a senha cadastrada no momento da matrícula.</p>
+              </div>
+
+              <sc-if value="{{ showFaceLoginBtn }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px 0 26px;">
+                  <button onClick="{{ startFaceAuth }}" style="width:74px;height:74px;border-radius:22px;background:#F6ECEC;border:1px solid #ecd9d9;display:flex;align-items:center;justify-content:center;">
+                    <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"/></svg>
+                  </button>
+                  <div style="font-size:13px;color:#6B6A67;">Toque para entrar com <b style="color:#741414;">Face ID</b></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin:4px 0 22px;color:#bdbbb6;font-size:12px;"><div style="flex:1;height:1px;background:#ECEAE6;"></div>ou use seus dados<div style="flex:1;height:1px;background:#ECEAE6;"></div></div>
+              </sc-if>
+
+              <!-- CPF -->
+              <label style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#46443f;">CPF</label>
+              <input value="{{ cpf }}" onInput="{{ onCpf }}" inputmode="numeric" placeholder="000.000.000-00" style="{{ cpfInputStyle }}" style-focus="border-color:#214866;box-shadow:0 0 0 3px rgba(33,72,102,.12);outline:none;"/>
+              <sc-if value="{{ hasCpfErr }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-size:12.5px;color:#B45309;font-weight:500;">{{ cpfErr }}</div></sc-if>
+
+              <!-- Senha -->
+              <div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 6px;">
+                <label style="font-size:13px;font-weight:600;color:#46443f;">Senha</label>
+                <button onClick="{{ toggleSenha }}" style="display:flex;align-items:center;gap:5px;background:none;border:none;padding:2px;color:#214866;font-size:12px;font-weight:600;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  {{ senhaToggleLabel }}
+                </button>
+              </div>
+              <input value="{{ senha }}" onInput="{{ onSenha }}" type="{{ senhaType }}" placeholder="Sua senha" style="{{ senhaInputStyle }}" style-focus="border-color:#214866;box-shadow:0 0 0 3px rgba(33,72,102,.12);outline:none;"/>
+              <sc-if value="{{ hasSenhaErr }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-size:12.5px;color:#B45309;font-weight:500;">{{ senhaErr }}</div></sc-if>
+
+              <sc-if value="{{ hasLoginErr }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:16px;display:flex;gap:9px;background:#FBF0E2;border:1px solid #f0dcc0;border-radius:10px;padding:11px 13px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+                  <div style="font-size:13px;line-height:1.45;color:#8a5a16;">{{ loginErr }}</div>
+                </div>
+              </sc-if>
+
+              <button onClick="{{ doLogin }}" style="{{ loginBtnStyle }}">
+                <sc-if value="{{ loginLoading }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block;width:17px;height:17px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></span></sc-if>
+                {{ loginBtnLabel }}
+              </button>
+
+              <button onClick="{{ forgotPwd }}" style="margin:18px auto 0;background:none;border:none;color:#214866;font-size:14px;font-weight:600;">Esqueci minha senha</button>
+
+              <div style="flex:1;"></div>
+              <p style="text-align:center;font-size:11px;color:#bdbbb6;margin:24px 0 0;">IPOG · Instituto de Pós-Graduação e Graduação</p>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ INÍCIO ============ -->
+        <sc-if value="{{ showHome }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Início" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#741414;padding:6px 20px 22px;color:#fff;flex:none;">
+              <div style="display:flex;align-items:center;justify-content:space-between;height:38px;">
+                <button onClick="{{ openDrawer }}" style="background:none;border:none;padding:6px;margin-left:-6px;color:#fff;display:flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+                <img src="assets/logo-ipog-white.png" alt="IPOG" style="height:17px;width:auto;opacity:.95;"/>
+                <button onClick="{{ openBell }}" style="background:none;border:none;padding:6px;margin-right:-6px;color:#fff;position:relative;display:flex;">
+                  <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                  <sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:3px;right:3px;min-width:16px;height:16px;padding:0 4px;background:#C0322B;border:1.5px solid #741414;border-radius:9px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ unread }}</span></sc-if>
+                </button>
+              </div>
+              <div style="margin-top:14px;">
+                <div style="font-size:13px;color:rgba(255,255,255,.72);font-weight:500;">Olá,</div>
+                <div style="font-size:27px;font-weight:700;letter-spacing:-.02em;line-height:1.1;">{{ firstName }}</div>
+                <button onClick="{{ toggleMatSel }}" style="margin-top:12px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:none;border-radius:12px;padding:10px 13px;color:#fff;max-width:100%;">
+                  <div style="text-align:left;min-width:0;">
+                    <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;">{{ cursoAtivo }}</div>
+                    <div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:1px;">Matrícula {{ matId }}</div>
+                  </div>
+                  <sc-if value="{{ matSwitching }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex:none;"></span></sc-if>
+                  <sc-if value="{{ matSelClosed }}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="m6 9 6 6 6-6"/></svg></sc-if>
+                </button>
+              </div>
+            </div>
+
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 24px;">
+              <sc-if value="{{ showAlertsSection }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:0 2px 10px;">Avisos</div>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+                  <sc-if value="{{ showA1 }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ a1Go }}" style="background:#fff;border:1px solid #ECEAE6;border-left:3px solid #B45309;border-radius:13px;padding:13px 12px 13px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                      <div style="flex:none;width:36px;height:36px;border-radius:10px;background:#FBF0E2;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+                      <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#1C1B1A;">Parcela #09 vence em 3 dias</div><div style="font-size:12px;color:#6B6A67;margin-top:1px;">Vencimento 05/06 · R$ 749,00 · ver no Financeiro</div></div>
+                      <button onClick="{{ a1Dismiss }}" style="flex:none;background:none;border:none;padding:5px;color:#bdbbb6;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ showA2 }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ a2Go }}" style="background:#fff;border:1px solid #ECEAE6;border-left:3px solid #214866;border-radius:13px;padding:13px 12px 13px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                      <div style="flex:none;width:36px;height:36px;border-radius:10px;background:#EAF0F5;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#214866" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></div>
+                      <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#1C1B1A;">Requerimento 340277 atualizado</div><div style="font-size:12px;color:#6B6A67;margin-top:1px;">A secretaria adicionou uma nova interação</div></div>
+                      <button onClick="{{ a2Dismiss }}" style="flex:none;background:none;border:none;padding:5px;color:#bdbbb6;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ showA3 }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ a3Go }}" style="background:#fff;border:1px solid #ECEAE6;border-left:3px solid #1B7A4B;border-radius:13px;padding:13px 12px 13px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                      <div style="flex:none;width:36px;height:36px;border-radius:10px;background:#E6F2EB;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1B7A4B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l10-4 10 4-10 4Z"/><path d="M6 9.5V15c0 1 2.7 3 6 3s6-2 6-3V9.5"/></svg></div>
+                      <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#1C1B1A;">Aula de reposição disponível</div><div style="font-size:12px;color:#6B6A67;margin-top:1px;">Métodos Ágeis e Gestão de Mudanças</div></div>
+                      <button onClick="{{ a3Dismiss }}" style="flex:none;background:none;border:none;padding:5px;color:#bdbbb6;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:0 2px 10px;">Acesso rápido</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:24px;">
+                <button onClick="{{ goDisc }}" style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                  <div style="width:42px;height:42px;border-radius:12px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+                  <div style="font-size:14.5px;font-weight:600;color:#1C1B1A;">Minhas Disciplinas</div>
+                </button>
+                <button onClick="{{ goFin }}" style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                  <div style="width:42px;height:42px;border-radius:12px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
+                  <div style="font-size:14.5px;font-weight:600;color:#1C1B1A;">Financeiro</div>
+                </button>
+                <button onClick="{{ goSec }}" style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                  <div style="width:42px;height:42px;border-radius:12px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6"/></svg></div>
+                  <div style="font-size:14.5px;font-weight:600;color:#1C1B1A;">Secretaria Digital</div>
+                </button>
+                <button onClick="{{ openBell }}" style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 2px rgba(0,0,0,.03);position:relative;">
+                  <div style="width:42px;height:42px;border-radius:12px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div>
+                  <div style="font-size:14.5px;font-weight:600;color:#1C1B1A;">Mensagens</div>
+                  <sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:14px;right:14px;min-width:20px;height:20px;padding:0 5px;background:#C0322B;border-radius:10px;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ unread }}</span></sc-if>
+                </button>
+              </div>
+
+              <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:0 2px 10px;">Mais opções</div>
+              <div style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                <sc-for list="{{ maisOpcoes }}" as="item" hint-placeholder-count="6">
+                  <button onClick="{{ item.onClick }}" style="width:100%;display:flex;align-items:center;gap:13px;padding:14px 15px;background:none;border:none;border-top:1px solid #F1EFEB;text-align:left;">
+                    <span style="width:9px;height:9px;border-radius:3px;background:#214866;flex:none;opacity:.85;"></span>
+                    <span style="flex:1;font-size:14.5px;color:#34322e;font-weight:500;">{{ item.label }}</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9c7c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ DISCIPLINAS (lista) ============ -->
+        <sc-if value="{{ showDiscList }}" hint-placeholder-val="{{ false }}"><div data-screen-label="Disciplinas" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:0 12px;flex:none;display:flex;align-items:center;gap:4px;height:53px;">
+              <button onClick="{{ openDrawer }}" style="background:none;border:none;padding:7px;color:#34322e;display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+              <h1 style="flex:1;text-align:center;margin:0;font-size:17px;font-weight:700;color:#1C1B1A;">Minhas Disciplinas</h1>
+              <button onClick="{{ openBell }}" style="background:none;border:none;padding:7px;color:#34322e;position:relative;display:flex;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span style="position:absolute;top:5px;right:5px;min-width:15px;height:15px;padding:0 4px;background:#C0322B;border:1.5px solid #fff;border-radius:8px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">{{ unread }}</span></button>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 16px 22px;">
+              <sc-for list="{{ discGroups }}" as="g" hint-placeholder-count="2">
+                <div style="margin-bottom:22px;">
+                  <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:0 2px 11px;">{{ g.modulo }}</div>
+                  <div style="display:flex;flex-direction:column;gap:11px;">
+                    <sc-for list="{{ g.items }}" as="d" hint-placeholder-count="3">
+                      <button onClick="{{ d.onOpen }}" style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:15px 15px 14px;text-align:left;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                        <div style="display:flex;align-items:flex-start;gap:8px;">
+                          <div style="flex:1;min-width:0;">
+                            <div style="font-size:15.5px;font-weight:600;color:#1C1B1A;line-height:1.3;">{{ d.nome }}</div>
+                            <div style="font-size:12.5px;color:#9A9894;margin-top:3px;">{{ d.periodo }}</div>
+                          </div>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9c7c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:3px;flex:none;"><path d="m9 18 6-6-6-6"/></svg>
+                        </div>
+                        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:13px;">
+                          <span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:7px;color:{{ d.s.color }};background:{{ d.s.bg }};">{{ d.s.label }}</span>
+                          <div style="display:flex;gap:18px;">
+                            <div style="text-align:right;"><div style="font-size:10px;color:#A3A19C;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Nota</div><div style="font-size:13.5px;font-weight:700;color:#46443f;margin-top:1px;">{{ d.nota }}</div></div>
+                            <div style="text-align:right;"><div style="font-size:10px;color:#A3A19C;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Freq.</div><div style="font-size:13.5px;font-weight:700;color:#46443f;margin-top:1px;">{{ d.freq }}</div></div>
+                          </div>
+                        </div>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="flex:none;background:#fff;border-top:1px solid #ECEAE6;display:flex;align-items:stretch;">
+              <button onClick="{{ verHorario }}" style="flex:1;background:none;border:none;padding:14px 8px;display:flex;align-items:center;justify-content:center;gap:7px;color:#214866;font-size:13.5px;font-weight:600;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Horário das Aulas</button>
+              <div style="width:1px;background:#ECEAE6;margin:10px 0;"></div>
+              <button onClick="{{ verMatriz }}" style="flex:1;background:none;border:none;padding:14px 8px;display:flex;align-items:center;justify-content:center;gap:7px;color:#214866;font-size:13.5px;font-weight:600;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Matriz Curricular</button>
+            </div>
+          </div></sc-if>
+        <!-- ============ DISCIPLINA (detalhe) ============ -->
+        <sc-if value="{{ showDiscDetail }}" hint-placeholder-val="{{ false }}"><div data-screen-label="Disciplina" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:0 8px;flex:none;display:flex;align-items:center;gap:2px;height:53px;">
+              <button onClick="{{ backDisc }}" style="background:none;border:none;padding:8px;color:#34322e;display:flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+              <h1 style="flex:1;text-align:center;margin:0;font-size:15.5px;font-weight:700;color:#1C1B1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px;">{{ discDetail.nome }}</h1>
+              <div style="width:40px;flex:none;"></div>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 16px 24px;">
+              <div style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                <div style="font-size:12.5px;color:#9A9894;">{{ discDetail.periodo }}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;">
+                  <span style="font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:8px;color:{{ discDetail.s.color }};background:{{ discDetail.s.bg }};">{{ discDetail.s.label }}</span>
+                  <div style="display:flex;gap:24px;">
+                    <div style="text-align:right;"><div style="font-size:10.5px;color:#A3A19C;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Nota</div><div style="font-size:18px;font-weight:700;color:#1C1B1A;margin-top:2px;">{{ discDetail.nota }}</div></div>
+                    <div style="text-align:right;"><div style="font-size:10.5px;color:#A3A19C;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Frequência</div><div style="font-size:18px;font-weight:700;color:#1C1B1A;margin-top:2px;">{{ discDetail.freq }}</div></div>
+                  </div>
+                </div>
+              </div>
+
+              <sc-if value="{{ discDetail.reposicao }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:14px;background:#FBF0E2;border:1px solid #f0dcc0;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.5 2.8L3 8"/><path d="M3 3v5h5"/></svg>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#8a5a16;">Reposição disponível</div><div style="font-size:12.5px;color:#a0763a;margin-top:1px;">Você faltou à aula de 23 Mai. Agende a reposição.</div></div>
+                  <button onClick="{{ agendarReposicao }}" style="flex:none;background:#B45309;border:none;color:#fff;font-size:13px;font-weight:600;padding:9px 13px;border-radius:10px;">Agendar</button>
+                </div>
+              </sc-if>
+
+              <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:22px 2px 11px;">Calendário de aulas</div>
+              <div style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                <sc-for list="{{ discDetail.aulasUI }}" as="a" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:13px;padding:13px 15px;border-top:1px solid #F1EFEB;">
+                    <div style="flex:none;width:50px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#46443f;">{{ a.data }}</div><div style="font-size:11px;color:#A3A19C;">{{ a.dia }}</div></div>
+                    <div style="width:1px;align-self:stretch;background:#F1EFEB;"></div>
+                    <div style="flex:1;min-width:0;"><div style="font-size:13.5px;color:#46443f;font-weight:500;">{{ a.hora }}</div><div style="font-size:12.5px;font-weight:600;color:{{ a.color }};margin-top:2px;">{{ a.label }}</div></div>
+                    <sc-if value="{{ a.isRepo }}" hint-placeholder-val="{{ false }}"><button onClick="{{ agendarReposicao }}" style="flex:none;background:#FBF0E2;border:1px solid #f0dcc0;color:#B45309;font-size:12px;font-weight:600;padding:7px 11px;border-radius:9px;">Agendar</button></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div></sc-if>
+        <!-- ============ FINANCEIRO ============ -->
+        <sc-if value="{{ showFin }}" hint-placeholder-val="{{ false }}"><div data-screen-label="Financeiro" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:0 12px;flex:none;display:flex;align-items:center;gap:4px;height:53px;">
+              <button onClick="{{ openDrawer }}" style="background:none;border:none;padding:7px;color:#34322e;display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+              <h1 style="flex:1;text-align:center;margin:0;font-size:17px;font-weight:700;color:#1C1B1A;">Financeiro</h1>
+              <button onClick="{{ openBell }}" style="background:none;border:none;padding:7px;color:#34322e;position:relative;display:flex;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span style="position:absolute;top:5px;right:5px;min-width:15px;height:15px;padding:0 4px;background:#C0322B;border:1.5px solid #fff;border-radius:8px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">{{ unread }}</span></button>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 16px 22px;">
+              <div style="display:flex;gap:9px;margin-bottom:16px;">
+                <div style="flex:1;background:#fff;border:1px solid #ECEAE6;border-radius:14px;padding:13px 11px;box-shadow:0 1px 2px rgba(0,0,0,.03);"><div style="font-size:10.5px;font-weight:600;color:#A3A19C;text-transform:uppercase;letter-spacing:.03em;">Em aberto</div><div style="font-size:15px;font-weight:700;color:#B45309;margin-top:6px;">{{ finAberto }}</div></div>
+                <div style="flex:1;background:#fff;border:1px solid #ECEAE6;border-radius:14px;padding:13px 11px;box-shadow:0 1px 2px rgba(0,0,0,.03);"><div style="font-size:10.5px;font-weight:600;color:#A3A19C;text-transform:uppercase;letter-spacing:.03em;">Em atraso</div><div style="font-size:15px;font-weight:700;color:#C0322B;margin-top:6px;">{{ finAtraso }}</div></div>
+                <div style="flex:1;background:#fff;border:1px solid #ECEAE6;border-radius:14px;padding:13px 11px;box-shadow:0 1px 2px rgba(0,0,0,.03);"><div style="font-size:10.5px;font-weight:600;color:#A3A19C;text-transform:uppercase;letter-spacing:.03em;">Total pago</div><div style="font-size:15px;font-weight:700;color:#1B7A4B;margin-top:6px;">{{ finPago }}</div></div>
+              </div>
+
+              <sc-if value="{{ hasAtraso }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#FBEAE9;border:1px solid #f1cdca;border-radius:14px;padding:14px;margin-bottom:16px;">
+                  <div style="font-size:14px;font-weight:600;color:#8f2520;">Você tem parcelas em atraso</div>
+                  <p style="font-size:12.5px;line-height:1.45;color:#a3433d;margin:5px 0 12px;">Regularize sua situação com condições especiais formalizando uma confissão de dívida.</p>
+                  <button onClick="{{ confissao }}" style="background:#C0322B;border:none;color:#fff;font-size:13.5px;font-weight:600;padding:10px 15px;border-radius:10px;">Confissão de Dívida</button>
+                </div>
+              </sc-if>
+
+              <div style="display:flex;gap:7px;margin-bottom:16px;">
+                <sc-for list="{{ finChips }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.onClick }}" style="{{ c.wrapStyle }}">{{ c.label }}</button></sc-for>
+              </div>
+
+              <sc-if value="{{ finEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:center;padding:48px 24px;color:#9A9894;"><div style="font-size:14px;font-weight:500;">Nenhuma parcela neste filtro.</div></div>
+              </sc-if>
+
+              <div style="display:flex;flex-direction:column;gap:11px;">
+                <sc-for list="{{ finList }}" as="p" hint-placeholder-count="4">
+                  <div style="background:#fff;border:1px solid #ECEAE6;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                    <button onClick="{{ p.onToggle }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:14px 15px;background:none;border:none;text-align:left;">
+                      <div style="flex:1;min-width:0;"><div style="font-size:14.5px;font-weight:600;color:#1C1B1A;">Parcela #{{ p.num }}</div><div style="font-size:12.5px;color:#9A9894;margin-top:2px;">Vence {{ p.venc }}</div></div>
+                      <div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:#1C1B1A;">{{ p.valor }}</div><span style="display:inline-block;margin-top:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;color:{{ p.s.color }};background:{{ p.s.bg }};">{{ p.s.label }}</span></div>
+                    </button>
+                    <sc-if value="{{ p.recent }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:0 15px 11px;"><div style="background:#E6F2EB;border-radius:8px;padding:8px 11px;font-size:11.5px;line-height:1.4;color:#1B7A4B;font-weight:500;">✓ Pago recentemente · pode levar até 24h para atualizar no sistema.</div></div>
+                    </sc-if>
+                    <sc-if value="{{ p.expanded }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:2px 15px 15px;border-top:1px solid #F1EFEB;">
+                        <div style="display:flex;flex-direction:column;gap:9px;padding-top:12px;">
+                          <div><div style="font-size:11px;color:#A3A19C;font-weight:600;">Descrição</div><div style="font-size:13.5px;color:#46443f;margin-top:1px;">{{ p.desc }}</div></div>
+                          <div><div style="font-size:11px;color:#A3A19C;font-weight:600;">Forma de pagamento</div><div style="font-size:13.5px;color:#46443f;margin-top:1px;">{{ p.forma }}</div></div>
+                          <sc-if value="{{ p.hasPag }}" hint-placeholder-val="{{ false }}"><div><div style="font-size:11px;color:#A3A19C;font-weight:600;">Pago em</div><div style="font-size:13.5px;color:#46443f;margin-top:1px;">{{ p.dataPag }}</div></div></sc-if>
+                        </div>
+                        <sc-if value="{{ p.showActions }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;gap:9px;margin-top:14px;">
+                            <button onClick="{{ genBoleto }}" style="flex:1;background:#741414;border:none;color:#fff;font-size:13px;font-weight:600;padding:11px;border-radius:11px;">Gerar 2ª via</button>
+                            <button onClick="{{ antecipar }}" style="flex:1;background:#fff;border:1.5px solid #741414;color:#741414;font-size:13px;font-weight:600;padding:11px;border-radius:11px;">Antecipar</button>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div></sc-if>
+        <!-- ============ SECRETARIA (lista) ============ -->
+        <sc-if value="{{ showSecList }}" hint-placeholder-val="{{ false }}"><div data-screen-label="Secretaria" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:0 12px;flex:none;display:flex;align-items:center;gap:4px;height:53px;">
+              <button onClick="{{ openDrawer }}" style="background:none;border:none;padding:7px;color:#34322e;display:flex;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+              <h1 style="flex:1;text-align:center;margin:0;font-size:17px;font-weight:700;color:#1C1B1A;">Secretaria Digital</h1>
+              <button onClick="{{ openBell }}" style="background:none;border:none;padding:7px;color:#34322e;position:relative;display:flex;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span style="position:absolute;top:5px;right:5px;min-width:15px;height:15px;padding:0 4px;background:#C0322B;border:1.5px solid #fff;border-radius:8px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">{{ unread }}</span></button>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:16px 16px 22px;">
+              <button onClick="{{ openNovo }}" style="width:100%;background:#741414;border:none;color:#fff;font-size:15px;font-weight:600;padding:14px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:18px;box-shadow:0 4px 12px -4px rgba(116,20,20,.45);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Novo Requerimento</button>
+
+              <div style="display:flex;gap:7px;margin-bottom:16px;">
+                <sc-for list="{{ secChips }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.onClick }}" style="{{ c.wrapStyle }}">{{ c.label }}</button></sc-for>
+              </div>
+
+              <sc-if value="{{ secEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:center;padding:48px 24px;color:#9A9894;"><div style="font-size:14px;font-weight:500;">Nenhum requerimento neste filtro.</div></div>
+              </sc-if>
+
+              <div style="display:flex;flex-direction:column;gap:11px;">
+                <sc-for list="{{ secList }}" as="r" hint-placeholder-count="3">
+                  <button onClick="{{ r.onOpen }}" style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;padding:15px;text-align:left;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                    <div style="display:flex;align-items:flex-start;gap:10px;">
+                      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;color:#1C1B1A;line-height:1.3;">{{ r.tipo }}</div><div style="font-size:12.5px;color:#9A9894;margin-top:2px;">{{ r.curso }}</div></div>
+                      <div style="font-size:11.5px;color:#A3A19C;font-weight:500;white-space:nowrap;flex:none;">{{ r.abertura }}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:7px;margin-top:12px;flex-wrap:wrap;">
+                      <span style="font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:7px;color:{{ r.s.color }};background:{{ r.s.bg }};">{{ r.s.label }}</span>
+                      <sc-if value="{{ r.urgente }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;padding:4px 9px;border-radius:7px;color:#C0322B;background:#FBEAE9;display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Prazo &lt; 48h</span></sc-if>
+                      <sc-if value="{{ r.updated }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;padding:4px 9px;border-radius:7px;color:#214866;background:#EAF0F5;">Atualizado</span></sc-if>
+                    </div>
+                    <sc-if value="{{ r.hasMotivo }}" hint-placeholder-val="{{ false }}">
+                      <div style="margin-top:11px;background:#FBEAE9;border-radius:9px;padding:9px 11px;font-size:12px;line-height:1.4;color:#8f2520;"><b style="font-weight:700;">Motivo: </b>{{ r.motivo }}</div>
+                    </sc-if>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div></sc-if>
+        <!-- ============ SECRETARIA (detalhe) ============ -->
+        <sc-if value="{{ showSecDetail }}" hint-placeholder-val="{{ false }}"><div data-screen-label="Requerimento" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:0 8px;flex:none;display:flex;align-items:center;gap:2px;height:53px;">
+              <button onClick="{{ backSecList }}" style="background:none;border:none;padding:8px;color:#34322e;display:flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+              <h1 style="flex:1;text-align:center;margin:0;font-size:16px;font-weight:700;color:#1C1B1A;">Requerimento {{ secActive.id }}</h1>
+              <div style="width:40px;flex:none;"></div>
+            </div>
+            <div style="background:#fff;padding:14px 16px 0;flex:none;">
+              <div style="font-size:16px;font-weight:700;color:#1C1B1A;">{{ secActive.tipo }}</div>
+              <div style="margin-top:8px;"><span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:7px;color:{{ secActive.s.color }};background:{{ secActive.s.bg }};">{{ secActive.s.label }}</span></div>
+              <div style="display:flex;margin-top:12px;border-bottom:1px solid #ECEAE6;">
+                <button onClick="{{ setTabDados }}" style="{{ tabDadosStyle }}">Dados</button>
+                <button onClick="{{ setTabAnexos }}" style="{{ tabAnexosStyle }}">Anexos</button>
+                <button onClick="{{ setTabInter }}" style="{{ tabInterStyle }}">Interações</button>
+              </div>
+            </div>
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 16px 24px;">
+              <sc-if value="{{ secTabDados }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                  <div style="padding:13px 15px;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Protocolo</div><div style="font-size:14px;color:#1C1B1A;font-weight:600;margin-top:2px;">{{ secActive.id }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Tipo</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ secActive.tipo }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Matrícula</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ matId }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Curso</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ secActive.curso }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Turma</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ secActive.turma }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Data de abertura</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ secActive.abertura }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Prazo</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ secActive.prazo }}</div></div>
+                </div>
+                <sc-if value="{{ secActive.hasMotivo }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:12px;background:#FBEAE9;border:1px solid #f1cdca;border-radius:12px;padding:13px 15px;"><div style="font-size:12px;font-weight:700;color:#8f2520;">Motivo do indeferimento</div><div style="font-size:13px;line-height:1.45;color:#a3433d;margin-top:4px;">{{ secActive.motivo }}</div></div>
+                </sc-if>
+              </sc-if>
+
+              <sc-if value="{{ secTabAnexos }}" hint-placeholder-val="{{ false }}">
+                <sc-if value="{{ secActive.hasAnexos }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:11px;">
+                    <sc-for list="{{ secActive.anexos }}" as="ax" hint-placeholder-count="1">
+                      <div style="background:#fff;border:1px solid #ECEAE6;border-radius:14px;padding:13px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                        <div style="flex:none;width:40px;height:40px;border-radius:10px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                        <div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:600;color:#1C1B1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ ax.nome }}</div><div style="font-size:11.5px;color:#9A9894;margin-top:1px;">PDF · {{ ax.tam }}</div></div>
+                        <button onClick="{{ ax.onDownload }}" style="flex:none;background:#741414;border:none;color:#fff;padding:9px 12px;border-radius:10px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 4 5-4M5 21h14"/></svg>Baixar</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ secActive.noAnexos }}" hint-placeholder-val="{{ false }}">
+                  <div style="text-align:center;padding:44px 24px;color:#9A9894;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#cfcdc8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><div style="font-size:13.5px;font-weight:500;">Nenhum documento anexado ainda.</div></div>
+                </sc-if>
+              </sc-if>
+
+              <sc-if value="{{ secTabInter }}" hint-placeholder-val="{{ false }}">
+                <div style="position:relative;padding-left:8px;">
+                  <sc-for list="{{ secActive.interacoes }}" as="ev" hint-placeholder-count="3">
+                    <div style="position:relative;padding:0 0 20px 22px;border-left:2px solid #ECEAE6;">
+                      <div style="position:absolute;left:-7px;top:1px;width:12px;height:12px;border-radius:50%;background:#741414;border:2px solid #fff;"></div>
+                      <div style="font-size:11.5px;color:#A3A19C;font-weight:600;">{{ ev.data }} · {{ ev.hora }}</div>
+                      <div style="font-size:13.5px;font-weight:600;color:#1C1B1A;margin-top:3px;">{{ ev.quem }}</div>
+                      <div style="font-size:13px;line-height:1.45;color:#6B6A67;margin-top:2px;">{{ ev.txt }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div></sc-if>
+        <!-- ============ NOVO REQUERIMENTO ============ -->
+        <sc-if value="{{ showNovo }}" hint-placeholder-val="{{ false }}"><div data-screen-label="Novo Requerimento" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+            <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:0 8px;flex:none;display:flex;align-items:center;gap:2px;height:53px;">
+              <button onClick="{{ novoBackStep }}" style="background:none;border:none;padding:8px;color:#34322e;display:flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+              <h1 style="flex:1;text-align:center;margin:0;font-size:16px;font-weight:700;color:#1C1B1A;">Novo Requerimento</h1>
+              <div style="width:40px;flex:none;"></div>
+            </div>
+
+            <sc-if value="{{ novoNotDone }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#fff;border-bottom:1px solid #ECEAE6;padding:16px 30px 14px;flex:none;">
+                <div style="display:flex;align-items:center;">
+                  <div style="{{ dot1Style }}">1</div>
+                  <div style="{{ lineAStyle }};margin:0 6px;"></div>
+                  <div style="{{ dot2Style }}">2</div>
+                  <div style="{{ lineBStyle }};margin:0 6px;"></div>
+                  <div style="{{ dot3Style }}">3</div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;font-weight:600;color:#9A9894;">
+                  <span>Tipo</span><span>Dados</span><span>Revisão</span>
+                </div>
+              </div>
+            </sc-if>
+
+            <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 16px 24px;">
+              <!-- ETAPA 1 -->
+              <sc-if value="{{ novoIsStep1 }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:13.5px;color:#6B6A67;margin:0 2px 16px;">Selecione o tipo de requerimento que você precisa.</div>
+                <sc-for list="{{ novoCats }}" as="c" hint-placeholder-count="4">
+                  <div style="margin-bottom:18px;">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:0 2px 9px;">{{ c.nome }}</div>
+                    <div style="background:#fff;border:1px solid #ECEAE6;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                      <sc-for list="{{ c.tipos }}" as="t" hint-placeholder-count="3">
+                        <button onClick="{{ t.onSelect }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:13px 15px;background:none;border:none;border-top:1px solid #F1EFEB;text-align:left;">
+                          <div style="flex:1;min-width:0;"><div style="font-size:14.5px;font-weight:600;color:#1C1B1A;">{{ t.nome }}</div><div style="font-size:12px;color:#9A9894;margin-top:1px;line-height:1.35;">{{ t.desc }}</div></div>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9c7c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </sc-if>
+
+              <!-- ETAPA 2 -->
+              <sc-if value="{{ novoIsStep2 }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#F6ECEC;border:1px solid #ecd9d9;border-radius:12px;padding:13px 15px;margin-bottom:18px;"><div style="font-size:11px;font-weight:600;color:#a06a6a;text-transform:uppercase;letter-spacing:.03em;">{{ novoCat }}</div><div style="font-size:15px;font-weight:700;color:#741414;margin-top:2px;">{{ novoTipo }}</div></div>
+
+                <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;margin:0 2px 9px;">Confirmados automaticamente</div>
+                <div style="background:#fff;border:1px solid #ECEAE6;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);margin-bottom:20px;">
+                  <div style="padding:12px 15px;display:flex;align-items:center;gap:8px;"><div style="flex:1;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Matrícula</div><div style="font-size:14px;color:#46443f;margin-top:1px;">{{ matId }}</div></div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9c7c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                  <div style="padding:12px 15px;border-top:1px solid #F1EFEB;display:flex;align-items:center;gap:8px;"><div style="flex:1;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Curso</div><div style="font-size:14px;color:#46443f;margin-top:1px;">{{ cursoAtivo }}</div></div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9c7c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                  <div style="padding:12px 15px;border-top:1px solid #F1EFEB;display:flex;align-items:center;gap:8px;"><div style="flex:1;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Turma</div><div style="font-size:14px;color:#46443f;margin-top:1px;">{{ matTurma }}</div></div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9c7c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                </div>
+
+                <label style="display:block;font-size:13px;font-weight:600;color:#46443f;margin:0 2px 7px;">Justificativa / observações</label>
+                <textarea value="{{ novoMotivo }}" onInput="{{ onNovoMotivo }}" placeholder="Descreva o motivo da sua solicitação…" style="width:100%;min-height:96px;padding:12px 14px;border-radius:12px;border:1.5px solid #E7E5E1;background:#FBFAF8;font-size:15px;color:#1C1B1A;resize:none;line-height:1.45;" style-focus="border-color:#214866;box-shadow:0 0 0 3px rgba(33,72,102,.12);outline:none;"></textarea>
+
+                <div style="font-size:12px;color:#9A9894;margin:18px 2px 9px;line-height:1.4;">Anexe documentos comprobatórios em <b style="color:#6B6A67;">PDF ou JPG</b>, até <b style="color:#6B6A67;">5 MB</b>.</div>
+                <sc-if value="{{ novoNoAnexo }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ toggleAnexo }}" style="width:100%;border:1.5px dashed #d6cfc8;background:#FBFAF8;border-radius:12px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:7px;color:#741414;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><span style="font-size:13.5px;font-weight:600;">Anexar documento</span></button>
+                </sc-if>
+                <sc-if value="{{ novoAnexo }}" hint-placeholder-val="{{ false }}">
+                  <div style="background:#fff;border:1px solid #ECEAE6;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;"><div style="flex:none;width:38px;height:38px;border-radius:10px;background:#E6F2EB;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B7A4B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div style="flex:1;min-width:0;"><div style="font-size:13.5px;font-weight:600;color:#1C1B1A;">ementa-disciplina.pdf</div><div style="font-size:11.5px;color:#9A9894;">240 KB</div></div><button onClick="{{ toggleAnexo }}" style="flex:none;background:none;border:none;padding:6px;color:#A3A19C;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+                </sc-if>
+
+                <button onClick="{{ novoGoStep3 }}" style="width:100%;height:52px;border-radius:14px;border:none;background:#741414;color:#fff;font-size:16px;font-weight:600;margin-top:24px;">Continuar</button>
+              </sc-if>
+
+              <!-- ETAPA 3 -->
+              <sc-if value="{{ novoIsStep3 }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:13.5px;color:#6B6A67;margin:0 2px 16px;">Revise os dados antes de enviar.</div>
+                <div style="background:#fff;border:1px solid #ECEAE6;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                  <div style="padding:13px 15px;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Tipo</div><div style="font-size:14px;color:#1C1B1A;font-weight:600;margin-top:2px;">{{ novoTipo }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Categoria</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ novoCat }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Matrícula</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ matId }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Curso</div><div style="font-size:14px;color:#46443f;margin-top:2px;">{{ cursoAtivo }}</div></div>
+                  <div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Justificativa</div><div style="font-size:14px;color:#46443f;margin-top:2px;line-height:1.4;">{{ novoMotivo }}</div></div>
+                  <sc-if value="{{ novoAnexo }}" hint-placeholder-val="{{ false }}"><div style="padding:13px 15px;border-top:1px solid #F1EFEB;"><div style="font-size:11px;color:#A3A19C;font-weight:600;">Anexo</div><div style="font-size:14px;color:#46443f;margin-top:2px;">ementa-disciplina.pdf</div></div></sc-if>
+                </div>
+                <button onClick="{{ novoSubmit }}" style="width:100%;height:52px;border-radius:14px;border:none;background:#741414;color:#fff;font-size:16px;font-weight:600;margin-top:24px;">Confirmar e Enviar</button>
+                <button onClick="{{ novoBackStep }}" style="width:100%;height:48px;border-radius:14px;border:none;background:none;color:#6B6A67;font-size:15px;font-weight:600;margin-top:4px;">Voltar e Corrigir</button>
+              </sc-if>
+
+              <!-- SUCESSO -->
+              <sc-if value="{{ novoDone }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:42px 24px 0;">
+                  <div style="width:80px;height:80px;border-radius:50%;background:#E6F2EB;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#1B7A4B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+                  <div style="font-size:21px;font-weight:700;color:#1C1B1A;">Requerimento enviado!</div>
+                  <p style="font-size:14px;line-height:1.5;color:#6B6A67;margin:8px 0 0;max-width:270px;">Acompanhe o andamento na aba Interações do seu requerimento.</p>
+                  <div style="margin-top:22px;width:100%;background:#fff;border:1px solid #ECEAE6;border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.03);">
+                    <div style="font-size:11px;color:#A3A19C;font-weight:600;text-transform:uppercase;letter-spacing:.03em;">Protocolo</div>
+                    <div style="font-size:24px;font-weight:700;color:#741414;margin-top:3px;letter-spacing:-.01em;">Nº {{ novoProtocolo }}</div>
+                    <div style="font-size:13px;color:#6B6A67;margin-top:8px;">Prazo estimado de resposta: <b style="color:#46443f;">até 5 dias úteis</b>.</div>
+                  </div>
+                  <button onClick="{{ novoFinish }}" style="width:100%;height:52px;border-radius:14px;border:none;background:#741414;color:#fff;font-size:16px;font-weight:600;margin-top:22px;">Ver requerimentos</button>
+                </div>
+              </sc-if>
+            </div>
+          </div></sc-if>
+
+      </div>
+
+      <!-- ====== BOTTOM NAV ====== -->
+      <sc-if value="{{ showBottomNav }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;background:#fff;border-top:1px solid #ECEAE6;padding:8px 6px 22px;display:flex;">
+          <button onClick="{{ goInicio }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navInicioColor }};">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/></svg>
+            <span style="font-size:10.5px;font-weight:600;">Início</span>
+          </button>
+          <button onClick="{{ goDisc }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navDiscColor }};">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span style="font-size:10.5px;font-weight:600;">Disciplinas</span>
+          </button>
+          <button onClick="{{ goFin }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navFinColor }};">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            <span style="font-size:10.5px;font-weight:600;">Financeiro</span>
+          </button>
+          <button onClick="{{ goSec }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navSecColor }};">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            <span style="font-size:10.5px;font-weight:600;">Secretaria</span>
+          </button>
+          <button onClick="{{ openDrawer }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navMaisColor }};">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
+            <span style="font-size:10.5px;font-weight:600;">Mais</span>
+          </button>
+        </div>
+      </sc-if>
+
+      <!-- ====== OVERLAYS ====== -->
+      <!-- Matrícula selector -->
+      <sc-if value="{{ matSelOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ toggleMatSel }}" style="position:absolute;inset:0;z-index:40;background:rgba(20,12,12,.28);animation:fadeIn .15s ease;"></div>
+        <div style="position:absolute;left:16px;right:16px;top:188px;z-index:41;background:#fff;border-radius:16px;box-shadow:0 18px 40px -12px rgba(0,0,0,.3);overflow:hidden;animation:fadeUp .18s ease;">
+          <div style="padding:12px 16px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9A9894;">Trocar matrícula</div>
+          <sc-for list="{{ matriculas }}" as="m" hint-placeholder-count="2">
+            <button onClick="{{ m.onSelect }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:13px 16px;background:none;border:none;border-top:1px solid #F1EFEB;text-align:left;">
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#1C1B1A;">{{ m.curso }}</div><div style="font-size:12px;color:#6B6A67;margin-top:1px;">Matrícula {{ m.id }} · {{ m.turma }}</div></div>
+              <sc-if value="{{ m.active }}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- Drawer -->
+      <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeDrawer }}" style="position:absolute;inset:0;z-index:50;background:rgba(20,12,12,.4);animation:fadeIn .18s ease;"></div>
+        <div style="position:absolute;top:0;bottom:0;left:0;width:306px;z-index:51;background:#fff;display:flex;flex-direction:column;box-shadow:24px 0 50px -10px rgba(0,0,0,.3);animation:fadeIn .2s ease;">
+          <div style="background:#741414;padding:52px 22px 20px;color:#fff;">
+            <div style="display:flex;align-items:center;gap:13px;">
+              <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;">MR</div>
+              <div style="min-width:0;"><div style="font-size:16px;font-weight:700;">Mariana Ribeiro</div><div style="font-size:12px;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ cursoAtivo }}</div></div>
+            </div>
+          </div>
+          <div class="scroll" style="flex:1;overflow-y:auto;padding:8px 0;">
+            <sc-for list="{{ drawerItems }}" as="d" hint-placeholder-count="9">
+              <button onClick="{{ d.onClick }}" style="width:100%;display:flex;align-items:center;gap:14px;padding:13px 22px;background:none;border:none;text-align:left;color:{{ d.color }};">
+                <span style="width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.55;flex:none;"></span>
+                <span style="font-size:14.5px;font-weight:{{ d.weight }};">{{ d.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- Face ID authenticating -->
+      <sc-if value="{{ faceAuthing }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:60;background:rgba(255,255,255,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;animation:fadeIn .2s ease;">
+          <div style="width:96px;height:96px;border-radius:28px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;animation:pulseDim 1.4s ease-in-out infinite;">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"/></svg>
+          </div>
+          <div style="font-size:16px;font-weight:600;color:#46443f;">Autenticando com Face ID…</div>
+        </div>
+      </sc-if>
+
+      <!-- Face ID offer -->
+      <sc-if value="{{ faceOffer }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:60;background:rgba(20,12,12,.4);display:flex;align-items:flex-end;animation:fadeIn .2s ease;">
+          <div style="width:100%;background:#fff;border-radius:24px 24px 0 0;padding:28px 24px 30px;animation:sheetUp .28s cubic-bezier(.2,.8,.2,1);">
+            <div style="width:64px;height:64px;border-radius:18px;background:#F6ECEC;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#741414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"/></svg>
+            </div>
+            <div style="text-align:center;font-size:19px;font-weight:700;color:#1C1B1A;">Usar Face ID nas próximas vezes?</div>
+            <p style="text-align:center;font-size:14px;line-height:1.5;color:#6B6A67;margin:8px 0 22px;">Você entra mais rápido sem digitar seu CPF e senha toda vez.</p>
+            <button onClick="{{ acceptFace }}" style="width:100%;height:52px;border-radius:14px;border:none;background:#741414;color:#fff;font-size:16px;font-weight:600;margin-bottom:10px;">Sim, ativar</button>
+            <button onClick="{{ declineFace }}" style="width:100%;height:48px;border-radius:14px;border:none;background:none;color:#6B6A67;font-size:15px;font-weight:600;">Agora não</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- Toast -->
+      <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:104px;z-index:70;background:#1C1B1A;color:#fff;padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:500;box-shadow:0 12px 28px -8px rgba(0,0,0,.5);max-width:330px;text-align:center;animation:fadeUp .2s ease;">{{ toast }}</div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    screen: 'login',
+    cpf: '347.225.812-04', senha: '', showSenha: false,
+    cpfErr: '', senhaErr: '', loginErr: '', loginLoading: false,
+    faceMode: 'manual', faceAuthing: false, faceOffer: false,
+    tab: 'inicio', drawer: false,
+    matIndex: 0, matSelOpen: false, matSwitching: false,
+    dismissed: [],
+    discDetail: null,
+    finFilter: 'todas', finExpanded: null,
+    secView: 'list', secFilter: 'abertos', secActive: null, secTab: 'dados',
+    novo: { step: 1, cat: null, tipo: null, motivo: '', anexo: false, done: false, protocolo: null },
+    toast: null,
+  };
+
+  ST = {
+    aprovado:{label:'Aprovado',color:'#1B7A4B',bg:'#E6F2EB'},
+    reprovado:{label:'Reprovado',color:'#C0322B',bg:'#FBEAE9'},
+    andamento:{label:'Em andamento',color:'#B45309',bg:'#FBF0E2'},
+    pendente:{label:'Pendente',color:'#6B6A67',bg:'#EFEEEB'},
+    atraso:{label:'Em atraso',color:'#C0322B',bg:'#FBEAE9'},
+    aberto:{label:'A vencer',color:'#B45309',bg:'#FBF0E2'},
+    pago:{label:'Paga',color:'#1B7A4B',bg:'#E6F2EB'},
+    negociada:{label:'Negociada',color:'#6B6A67',bg:'#EFEEEB'},
+    analise:{label:'Em análise',color:'#B45309',bg:'#FBF0E2'},
+    deferido:{label:'Deferido',color:'#1B7A4B',bg:'#E6F2EB'},
+    indeferido:{label:'Indeferido',color:'#C0322B',bg:'#FBEAE9'},
+    documento:{label:'Aguardando documento',color:'#C2410C',bg:'#FCEEE3'},
+  };
+
+  matriculas = [
+    { id:'2024.2.04512', curso:'MBA em Gestão de Projetos', turma:'GPRJ-SP-2024B' },
+    { id:'2023.1.01187', curso:'Pós em Data Analytics & BI', turma:'DTAN-SP-2023A' },
+  ];
+
+  discData = [
+    { id:3, nome:'Gestão de Stakeholders e Comunicação', periodo:'Mar – Abr 2026', status:'aprovado', nota:'9,2', freq:'100%', mod:1, reposicao:false,
+      aulas:[{data:'07 Mar',dia:'Sáb',hora:'08h–12h',k:'presente'},{data:'08 Mar',dia:'Dom',hora:'08h–12h',k:'presente'},{data:'21 Mar',dia:'Sáb',hora:'08h–12h',k:'presente'},{data:'22 Mar',dia:'Dom',hora:'08h–12h',k:'presente'}] },
+    { id:1, nome:'Liderança e Gestão de Equipes', periodo:'Jan – Fev 2026', status:'aprovado', nota:'8,7', freq:'92%', mod:1, reposicao:false,
+      aulas:[{data:'18 Jan',dia:'Sáb',hora:'08h–12h',k:'presente'},{data:'19 Jan',dia:'Dom',hora:'08h–12h',k:'falta'},{data:'01 Fev',dia:'Sáb',hora:'08h–12h',k:'presente'},{data:'02 Fev',dia:'Dom',hora:'08h–12h',k:'presente'}] },
+    { id:2, nome:'Excel do Básico ao Avançado', periodo:'Nov – Dez 2025', status:'reprovado', nota:'4,5', freq:'61%', mod:1, reposicao:false,
+      aulas:[{data:'09 Nov',dia:'Sáb',hora:'08h–12h',k:'presente'},{data:'10 Nov',dia:'Dom',hora:'08h–12h',k:'falta'},{data:'23 Nov',dia:'Sáb',hora:'08h–12h',k:'falta'},{data:'24 Nov',dia:'Dom',hora:'08h–12h',k:'presente'}] },
+    { id:4, nome:'Métodos Ágeis e Gestão de Mudanças', periodo:'Mai – Jun 2026', status:'andamento', nota:'Não disponível', freq:'88%', mod:2, reposicao:true,
+      aulas:[{data:'09 Mai',dia:'Sáb',hora:'08h–12h',k:'presente'},{data:'10 Mai',dia:'Dom',hora:'08h–12h',k:'presente'},{data:'23 Mai',dia:'Sáb',hora:'08h–12h',k:'falta'},{data:'24 Mai',dia:'Dom',hora:'08h–12h',k:'reposicao'},{data:'06 Jun',dia:'Sáb',hora:'08h–12h',k:'futura'},{data:'07 Jun',dia:'Dom',hora:'08h–12h',k:'futura'}] },
+    { id:5, nome:'Gerenciamento de Custos e Orçamentos', periodo:'Jun – Jul 2026', status:'pendente', nota:'Não disponível', freq:'Não disponível', mod:2, reposicao:false,
+      aulas:[{data:'27 Jun',dia:'Sáb',hora:'08h–12h',k:'futura'},{data:'28 Jun',dia:'Dom',hora:'08h–12h',k:'futura'},{data:'11 Jul',dia:'Sáb',hora:'08h–12h',k:'futura'},{data:'12 Jul',dia:'Dom',hora:'08h–12h',k:'futura'}] },
+  ];
+
+  parcelas = [
+    { num:'08', venc:'05/05/2026', valor:'R$ 749,00', status:'atraso', desc:'Mensalidade · MBA em Gestão de Projetos', forma:'Boleto bancário', recent:false },
+    { num:'09', venc:'05/06/2026', valor:'R$ 749,00', status:'aberto', desc:'Mensalidade · MBA em Gestão de Projetos', forma:'Boleto bancário', recent:false },
+    { num:'10', venc:'05/07/2026', valor:'R$ 749,00', status:'aberto', desc:'Mensalidade · MBA em Gestão de Projetos', forma:'Boleto bancário', recent:false },
+    { num:'07', venc:'05/04/2026', valor:'R$ 749,00', status:'pago', desc:'Mensalidade · MBA em Gestão de Projetos', forma:'PIX', dataPag:'03/04/2026', recent:true },
+    { num:'06', venc:'05/03/2026', valor:'R$ 749,00', status:'pago', desc:'Mensalidade · MBA em Gestão de Projetos', forma:'Cartão de crédito', dataPag:'05/03/2026', recent:false },
+    { num:'05', venc:'05/02/2026', valor:'R$ 749,00', status:'pago', desc:'Mensalidade · MBA em Gestão de Projetos', forma:'Boleto bancário', dataPag:'04/02/2026', recent:false },
+    { num:'04', venc:'05/01/2026', valor:'R$ 749,00', status:'negociada', desc:'Mensalidade · incluída em acordo de renegociação', forma:'Acordo 3x', recent:false },
+  ];
+
+  requerimentos = [
+    { id:'340589', tipo:'Aproveitamento de Disciplina', curso:'MBA em Gestão de Projetos', abertura:'20/06/2026', status:'documento', open:true, urgente:true, updated:false, prazo:'Documento até 23/06/2026',
+      interacoes:[{data:'20/06/2026',hora:'10:22',quem:'Você',txt:'Requerimento aberto via app.'},{data:'20/06/2026',hora:'14:08',quem:'Secretaria Acadêmica',txt:'Recebido. Para análise, anexe a ementa da disciplina já cursada.'}],
+      anexos:[], doc:true },
+    { id:'340277', tipo:'Declaração de Frequência', curso:'MBA em Gestão de Projetos', abertura:'18/06/2026', status:'analise', open:true, urgente:false, updated:true, prazo:'Resposta até 25/06/2026',
+      interacoes:[{data:'18/06/2026',hora:'09:14',quem:'Você',txt:'Requerimento aberto via app.'},{data:'18/06/2026',hora:'11:30',quem:'Secretaria Acadêmica',txt:'Requerimento recebido e encaminhado para análise.'},{data:'21/06/2026',hora:'16:05',quem:'Secretaria Acadêmica',txt:'Documento em elaboração. Previsão de conclusão em 25/06.'}],
+      anexos:[], doc:false },
+    { id:'339102', tipo:'Declaração de Matrícula', curso:'MBA em Gestão de Projetos', abertura:'02/05/2026', status:'deferido', open:false, urgente:false, updated:false, prazo:'Concluído em 05/05/2026',
+      interacoes:[{data:'02/05/2026',hora:'08:40',quem:'Você',txt:'Requerimento aberto via app.'},{data:'02/05/2026',hora:'09:10',quem:'Secretaria Acadêmica',txt:'Recebido e encaminhado para emissão.'},{data:'05/05/2026',hora:'15:22',quem:'Secretaria Acadêmica',txt:'Deferido. Documento disponível na aba Anexos.'}],
+      anexos:[{nome:'Declaração de Matrícula.pdf',tam:'182 KB'}], doc:false },
+    { id:'338455', tipo:'Revisão de Nota', curso:'Excel do Básico ao Avançado', abertura:'10/04/2026', status:'indeferido', open:false, urgente:false, updated:false, motivo:'Prazo para solicitação de revisão expirado (5 dias após a divulgação da nota).', prazo:'Concluído em 14/04/2026',
+      interacoes:[{data:'10/04/2026',hora:'19:02',quem:'Você',txt:'Requerimento aberto via app.'},{data:'11/04/2026',hora:'10:15',quem:'Coordenação',txt:'Encaminhado para análise da coordenação.'},{data:'14/04/2026',hora:'17:48',quem:'Coordenação',txt:'Indeferido. Prazo de solicitação expirado.'}],
+      anexos:[], doc:false },
+  ];
+
+  categorias = [
+    { nome:'Documentos e Declarações', tipos:[
+      {nome:'Declaração de Matrícula',desc:'Comprova seu vínculo ativo com o curso.'},
+      {nome:'Declaração de Frequência',desc:'Atesta sua frequência nas disciplinas cursadas.'},
+      {nome:'Declaração de Conclusão',desc:'Para cursos concluídos, aguardando o certificado.'},
+      {nome:'Histórico Escolar',desc:'Relação de disciplinas, notas e carga horária.'} ]},
+    { nome:'Financeiro', tipos:[
+      {nome:'Negociação de Débitos',desc:'Renegocie parcelas em atraso.'},
+      {nome:'2ª via de Boleto',desc:'Gere um novo boleto de parcela em aberto.'},
+      {nome:'Revisão de Cobrança',desc:'Conteste um valor que considera incorreto.'} ]},
+    { nome:'Acadêmico', tipos:[
+      {nome:'Aproveitamento de Disciplina',desc:'Solicite dispensa por disciplina já cursada.'},
+      {nome:'Revisão de Nota',desc:'Peça a reavaliação de uma nota lançada.'},
+      {nome:'Trancamento de Matrícula',desc:'Suspenda temporariamente seus estudos.'} ]},
+    { nome:'Outros', tipos:[
+      {nome:'Solicitação Geral',desc:'Outros assuntos não listados acima.'} ]},
+  ];
+
+  toast = (msg) => { this.setState({ toast: msg }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: null }), 2600); };
+
+  onCpf = (e) => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,11), f = v;
+    if (v.length>9) f = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9);
+    else if (v.length>6) f = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6);
+    else if (v.length>3) f = v.slice(0,3)+'.'+v.slice(3);
+    this.setState({ cpf:f, cpfErr:'' });
+  };
+  onSenha = (e) => this.setState({ senha:e.target.value, senhaErr:'', loginErr:'' });
+  toggleSenha = () => this.setState({ showSenha: !this.state.showSenha });
+
+  doLogin = () => {
+    const digits = this.state.cpf.replace(/\D/g,'');
+    const cpfErr = digits.length===0 ? 'Informe o CPF' : (digits.length<11 ? 'CPF incompleto' : '');
+    const senhaErr = this.state.senha ? '' : 'Informe a senha';
+    if (cpfErr || senhaErr) { this.setState({ cpfErr, senhaErr, loginErr:'' }); return; }
+    this.setState({ cpfErr:'', senhaErr:'', loginErr:'', loginLoading:true });
+    setTimeout(() => {
+      if (this.state.senha.length < 4) { this.setState({ loginLoading:false, loginErr:'CPF ou senha incorretos. Tente novamente ou recupere sua senha abaixo.' }); return; }
+      if (this.state.faceMode !== 'auth') this.setState({ loginLoading:false, faceOffer:true });
+      else this.setState({ loginLoading:false, screen:'app', tab:'inicio' });
+    }, 1100);
+  };
+  forgotPwd = () => this.toast('Enviamos um link de recuperação para seu e-mail cadastrado.');
+  acceptFace = () => this.setState({ faceMode:'auth', faceOffer:false, screen:'app', tab:'inicio' });
+  declineFace = () => this.setState({ faceOffer:false, screen:'app', tab:'inicio' });
+  startFaceAuth = () => { this.setState({ faceAuthing:true }); setTimeout(() => this.setState({ faceAuthing:false, screen:'app', tab:'inicio' }), 1800); };
+  logout = () => {
+    const auth = this.state.faceMode === 'auth';
+    this.setState({ screen:'login', drawer:false, tab:'inicio', discDetail:null, secView:'list', senha:'', loginErr:'' });
+    if (auth) setTimeout(() => this.startFaceAuth(), 350);
+  };
+
+  go = (t, extra) => () => this.setState(Object.assign({ tab:t, drawer:false, matSelOpen:false, discDetail:null, secView:'list' }, extra||{}));
+  openDrawer = () => this.setState({ drawer:true });
+  closeDrawer = () => this.setState({ drawer:false });
+  openBell = () => this.toast('Você tem 3 mensagens não lidas.');
+  toggleMatSel = () => this.setState({ matSelOpen: !this.state.matSelOpen });
+  selectMat = (i) => () => {
+    if (i === this.state.matIndex) { this.setState({ matSelOpen:false }); return; }
+    this.setState({ matSelOpen:false, matSwitching:true });
+    setTimeout(() => this.setState({ matIndex:i, matSwitching:false, discDetail:null }), 750);
+  };
+  soon = () => this.toast('Esta seção estará disponível em breve.');
+
+  renderVals() {
+    const s = this.state, ST = this.ST;
+    const mat = this.matriculas[s.matIndex];
+    const inApp = s.screen === 'app';
+    const showHome = inApp && s.tab==='inicio';
+    const showDiscList = inApp && s.tab==='disciplinas' && !s.discDetail;
+    const showDiscDetail = inApp && s.tab==='disciplinas' && !!s.discDetail;
+    const showFin = inApp && s.tab==='financeiro';
+    const showSecList = inApp && s.tab==='secretaria' && s.secView==='list';
+    const showSecDetail = inApp && s.tab==='secretaria' && s.secView==='detail';
+    const showNovo = inApp && s.tab==='secretaria' && s.secView==='novo';
+    const navc = (t) => s.tab===t ? '#741414' : '#A3A19C';
+
+    // login styles
+    const inputBase = 'width:100%;height:50px;padding:0 15px;border-radius:12px;font-size:16px;color:#1C1B1A;background:#FBFAF8;border:1.5px solid ';
+    const cpfInputStyle = inputBase + (s.cpfErr ? '#D97706;' : '#E7E5E1;');
+    const senhaInputStyle = inputBase + (s.senhaErr ? '#D97706;' : '#E7E5E1;');
+    const canLogin = !!(s.cpf && s.senha) && !s.loginLoading;
+    const loginBtnStyle = 'margin-top:24px;width:100%;height:54px;border-radius:14px;border:none;font-size:16.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;'
+      + (canLogin ? 'background:#741414;color:#fff;' : 'background:#E7E5E1;color:#A3A19C;pointer-events:none;');
+
+    // alerts
+    const dis = s.dismissed;
+    const mkDismiss = (id) => (e) => { if(e&&e.stopPropagation) e.stopPropagation(); this.setState({ dismissed:[...this.state.dismissed,id] }); };
+    const showA1 = !dis.includes('a1'), showA2 = !dis.includes('a2'), showA3 = !dis.includes('a3');
+
+    // disciplinas
+    const decoDisc = (d) => Object.assign({}, d, { s:ST[d.status], onOpen:() => this.setState({ discDetail:d }) });
+    const discGroups = [
+      { modulo:'Módulo 1 · Fundamentos', items:this.discData.filter(d=>d.mod===1).map(decoDisc) },
+      { modulo:'Módulo 2 · Execução', items:this.discData.filter(d=>d.mod===2).map(decoDisc) },
+    ];
+    const aulaUI = { presente:{label:'Presença confirmada',color:'#1B7A4B'}, falta:{label:'Falta',color:'#C0322B'}, reposicao:{label:'Reposição disponível',color:'#B45309'}, futura:{label:'Aula prevista',color:'#A3A19C'} };
+    let dd = null;
+    if (s.discDetail) dd = Object.assign({}, s.discDetail, { s:ST[s.discDetail.status], aulasUI:s.discDetail.aulas.map(a=>Object.assign({}, a, aulaUI[a.k], { isRepo:a.k==='reposicao' })) });
+
+    // financeiro
+    const chip = (active) => 'flex:1;text-align:center;padding:9px 4px;border-radius:10px;font-size:13px;font-weight:600;border:1px solid '+(active?'#741414':'#ECEAE6')+';background:'+(active?'#741414':'#fff')+';color:'+(active?'#fff':'#6B6A67')+';';
+    const fmatch = (p) => { const f=s.finFilter; if(f==='todas')return true; if(f==='aberto')return p.status==='aberto'||p.status==='atraso'; if(f==='pagas')return p.status==='pago'; if(f==='negociacao')return p.status==='negociada'; return true; };
+    let fl = this.parcelas.filter(fmatch).slice();
+    fl.sort((a,b)=> ((b.status==='atraso')-(a.status==='atraso')));
+    const finList = fl.map(p => Object.assign({}, p, { s:ST[p.status], hasPag:!!p.dataPag, expanded:s.finExpanded===p.num, showActions:(p.status==='aberto'||p.status==='atraso'), onToggle:() => this.setState({ finExpanded: this.state.finExpanded===p.num?null:p.num }) }));
+    const finChips = [['todas','Todas'],['aberto','Em aberto'],['pagas','Pagas'],['negociacao','Negociação']].map(([k,l]) => ({ label:l, wrapStyle:chip(s.finFilter===k), onClick:() => this.setState({ finFilter:k, finExpanded:null }) }));
+    const hasAtraso = this.parcelas.some(p=>p.status==='atraso');
+
+    // secretaria
+    const decoReq = (r) => Object.assign({}, r, { s:ST[r.status], hasMotivo:!!r.motivo, onOpen:() => this.setState({ secActive:r, secView:'detail', secTab:'dados' }) });
+    let secList = this.requerimentos.filter(r => r.open === (s.secFilter==='abertos')).map(decoReq);
+    secList.sort((a,b)=> ((b.updated?1:0)-(a.updated?1:0)));
+    const secChips = [['abertos','Abertos'],['finalizados','Finalizados']].map(([k,l]) => ({ label:l, wrapStyle:chip(s.secFilter===k), onClick:() => this.setState({ secFilter:k }) }));
+    const tabStyle = (active) => 'flex:1;text-align:center;padding:13px 4px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid '+(active?'#741414':'transparent')+';color:'+(active?'#741414':'#A3A19C')+';';
+    let sa = null;
+    if (s.secActive) sa = Object.assign({}, s.secActive, { s:ST[s.secActive.status], hasMotivo:!!s.secActive.motivo, hasAnexos:s.secActive.anexos.length>0, noAnexos:s.secActive.anexos.length===0, turma:mat.turma,
+      anexos:s.secActive.anexos.map(a=>Object.assign({}, a, { onDownload:() => this.toast('Baixando '+a.nome+'…') })) });
+
+    // novo requerimento
+    const n = s.novo;
+    const dotStyle = (st) => 'width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;'
+      + (st==='done' ? 'background:#741414;color:#fff;' : st==='active' ? 'background:#741414;color:#fff;' : 'background:#ECEAE6;color:#A3A19C;');
+    const stOf = (i) => n.step>i ? 'done' : (n.step===i ? 'active' : 'todo');
+    const novoCats = this.categorias.map(c => Object.assign({}, c, { tipos:c.tipos.map(t => Object.assign({}, t, { onSelect:() => this.setState({ novo:Object.assign({}, this.state.novo, { cat:c.nome, tipo:t.nome, step:2 }) }) })) }));
+
+    const maisOpcoes = [
+      { label:'Meus Dados', onClick:this.soon },
+      { label:'Meus Contratos', onClick:this.soon },
+      { label:'Portal AVA Blackboard', onClick:this.soon },
+      { label:'Declarações e Notas Fiscais', onClick:this.soon },
+      { label:'Arquivo Institucional', onClick:this.soon },
+      { label:'Central de Ajuda', onClick:this.soon },
+    ];
+    const drawerItems = [
+      { label:'Início', onClick:this.go('inicio'), color:'#741414', weight:'700' },
+      { label:'Minhas Disciplinas', onClick:this.go('disciplinas'), color:'#34322e', weight:'500' },
+      { label:'Financeiro', onClick:this.go('financeiro'), color:'#34322e', weight:'500' },
+      { label:'Secretaria Digital', onClick:this.go('secretaria'), color:'#34322e', weight:'500' },
+      { label:'Mensagens', onClick:() => { this.setState({drawer:false}); this.openBell(); }, color:'#34322e', weight:'500' },
+      { label:'Meus Documentos', onClick:() => { this.setState({drawer:false}); this.soon(); }, color:'#34322e', weight:'500' },
+      { label:'Meus Dados', onClick:() => { this.setState({drawer:false}); this.soon(); }, color:'#34322e', weight:'500' },
+      { label:'Central de Ajuda', onClick:() => { this.setState({drawer:false}); this.soon(); }, color:'#34322e', weight:'500' },
+      { label:'Sair', onClick:this.logout, color:'#C0322B', weight:'600' },
+    ];
+
+    return {
+      isLogin: s.screen==='login',
+      showHome, showDiscList, showDiscDetail, showFin, showSecList, showSecDetail, showNovo,
+      showBottomNav: inApp && !s.discDetail && !showSecDetail && !showNovo,
+      // login
+      cpf:s.cpf, senha:s.senha, senhaType:s.showSenha?'text':'password', senhaToggleLabel:s.showSenha?'ocultar senha':'mostrar senha',
+      cpfErr:s.cpfErr, hasCpfErr:!!s.cpfErr, senhaErr:s.senhaErr, hasSenhaErr:!!s.senhaErr, loginErr:s.loginErr, hasLoginErr:!!s.loginErr,
+      cpfInputStyle, senhaInputStyle, loginBtnStyle, loginLoading:s.loginLoading, loginBtnLabel:s.loginLoading?'Entrando…':'Entrar',
+      onCpf:this.onCpf, onSenha:this.onSenha, toggleSenha:this.toggleSenha, doLogin:this.doLogin, forgotPwd:this.forgotPwd,
+      showFaceLoginBtn: s.faceMode==='auth', startFaceAuth:this.startFaceAuth,
+      faceAuthing:s.faceAuthing, faceOffer:s.faceOffer, acceptFace:this.acceptFace, declineFace:this.declineFace,
+      // header / nav
+      firstName:'Mariana', cursoAtivo:mat.curso, matId:mat.id, matTurma:mat.turma,
+      matriculas:this.matriculas.map((m,i)=>Object.assign({}, m, { active:i===s.matIndex, onSelect:this.selectMat(i) })),
+      matSelOpen:s.matSelOpen, matSelClosed:!s.matSelOpen && !s.matSwitching, toggleMatSel:this.toggleMatSel, matSwitching:s.matSwitching,
+      openBell:this.openBell, unread:'3', hasUnread:true,
+      openDrawer:this.openDrawer, closeDrawer:this.closeDrawer, drawerOpen:s.drawer, logout:this.logout, drawerItems,
+      goInicio:this.go('inicio'), goDisc:this.go('disciplinas'), goFin:this.go('financeiro'), goSec:this.go('secretaria'),
+      navInicioColor:navc('inicio'), navDiscColor:navc('disciplinas'), navFinColor:navc('financeiro'), navSecColor:navc('secretaria'), navMaisColor:'#A3A19C',
+      maisOpcoes,
+      // alerts
+      showAlertsSection: showA1||showA2||showA3,
+      showA1, showA2, showA3,
+      a1Dismiss:mkDismiss('a1'), a2Dismiss:mkDismiss('a2'), a3Dismiss:mkDismiss('a3'),
+      a1Go:this.go('financeiro'), a2Go:this.go('secretaria'), a3Go:this.go('disciplinas'),
+      // disciplinas
+      discGroups, discDetail:dd, backDisc:() => this.setState({ discDetail:null }),
+      agendarReposicao:() => this.toast('Reposição agendada. Você receberá a confirmação por mensagem.'),
+      // financeiro
+      finAberto:'R$ 1.498,00', finAtraso:'R$ 749,00', finPago:'R$ 2.247,00',
+      finChips, finList, finEmpty:finList.length===0, hasAtraso,
+      genBoleto:() => this.toast('Gerando 2ª via do boleto…'),
+      antecipar:() => this.toast('Simulação de antecipação iniciada.'),
+      confissao:() => this.toast('Abrindo Confissão de Dívida…'),
+      // secretaria
+      secChips, secList, secEmpty:secList.length===0,
+      openNovo:() => this.setState({ secView:'novo', novo:{ step:1, cat:null, tipo:null, motivo:'', anexo:false, done:false, protocolo:null } }),
+      secActive:sa, backSecList:() => this.setState({ secView:'list', secActive:null }),
+      secTab:s.secTab, secTabDados:s.secTab==='dados', secTabAnexos:s.secTab==='anexos', secTabInter:s.secTab==='interacoes',
+      setTabDados:() => this.setState({secTab:'dados'}), setTabAnexos:() => this.setState({secTab:'anexos'}), setTabInter:() => this.setState({secTab:'interacoes'}),
+      tabDadosStyle:tabStyle(s.secTab==='dados'), tabAnexosStyle:tabStyle(s.secTab==='anexos'), tabInterStyle:tabStyle(s.secTab==='interacoes'),
+      // novo
+      novoCats, novoStep:n.step, novoTipo:n.tipo, novoCat:n.cat, novoMotivo:n.motivo, novoAnexo:n.anexo, novoDone:n.done, novoNotDone:!n.done, novoNoAnexo:!n.anexo, novoProtocolo:n.protocolo,
+      novoIsStep1:n.step===1 && !n.done, novoIsStep2:n.step===2 && !n.done, novoIsStep3:n.step===3 && !n.done,
+      dot1Style:dotStyle(stOf(1)), dot2Style:dotStyle(stOf(2)), dot3Style:dotStyle(stOf(3)),
+      dot1Done:n.step>1, dot2Done:n.step>2, dot3Done:false,
+      lineAStyle:'flex:1;height:2px;background:'+(n.step>1?'#741414':'#ECEAE6')+';', lineBStyle:'flex:1;height:2px;background:'+(n.step>2?'#741414':'#ECEAE6')+';',
+      onNovoMotivo:(e) => this.setState({ novo:Object.assign({}, this.state.novo, { motivo:e.target.value }) }),
+      toggleAnexo:() => this.setState({ novo:Object.assign({}, this.state.novo, { anexo:!this.state.novo.anexo }) }),
+      novoGoStep3:() => this.setState({ novo:Object.assign({}, this.state.novo, { step:3 }) }),
+      novoBackStep:() => { if(this.state.novo.step>1) this.setState({ novo:Object.assign({}, this.state.novo, { step:this.state.novo.step-1 }) }); else this.setState({ secView:'list' }); },
+      novoSubmit:() => this.setState({ novo:Object.assign({}, this.state.novo, { done:true, protocolo:String(340000+Math.floor(Math.random()*9999)) }) }),
+      novoFinish:() => this.setState({ secView:'list', secFilter:'abertos' }),
+      // toast
+      verHorario:() => this.toast('Abrindo Horário das Aulas…'), verMatriz:() => this.toast('Abrindo Matriz Curricular…'),
+      toast:s.toast, hasToast:!!s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
