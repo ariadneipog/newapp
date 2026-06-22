@@ -1,0 +1,200 @@
+
+
+Estrutura da tela de login
+1. Orientação contextual (topo)
+Antes de qualquer campo, o usuário precisa saber onde está e o que precisa para entrar.
+Uma linha curta abaixo do logo, algo como "Use seu CPF e a senha cadastrada no momento da matrícula". Sem isso, o campo "Usuário" é ambíguo — CPF? E-mail? Matrícula? O usuário não deveria precisar tentar para descobrir.
+Hierarquia: logo da instituição → frase de orientação. Peso visual: logo grande, frase menor em cinza. Não vermelho. Vermelho não é cor de instrução.
+2. Campos de entrada
+Dois campos: identificação e senha.
+O label de cada campo fica acima do input, não dentro dele como placeholder. Placeholder desaparece quando o usuário começa a digitar — nesse momento, quando ele mais precisa saber o que estava escrito lá, a informação some. Norman chamaria isso de falha de visibilidade.
+O campo de identificação tem um label explícito: "CPF" — não "Usuário". Se for CPF, escreve CPF. O teclado numérico deve abrir automaticamente nesse campo no mobile.
+O campo de senha tem o ícone de olho para revelar o conteúdo, mas ele precisa de um label de estado — "mostrar senha" e "ocultar senha" alternando em texto pequeno ao lado do ícone, não só o ícone sozinho. Ícone sem label é adivinhação.
+3. Acesso biométrico
+FaceID e TouchID não são toggle — são uma oferta. A lógica correta é: na primeira vez que o usuário faz login com sucesso, o sistema pergunta "Quer usar FaceID nas próximas vezes?" com dois botões claros, Sim e Agora não. Não um toggle no meio da tela de login que o usuário não sabe se está ativo ou não.
+Nas sessões seguintes, se o usuário aceitou, a tela de login abre com o Face ID ativando automaticamente, com um feedback visual claro (ícone do rosto + texto "Autenticando com FaceID..."). Se falhar, aí sim cai para os campos manuais.
+4. Botão de login
+Um único botão primário, centralizado, com texto direto: "Entrar".
+Estado desabilitado enquanto os campos estão vazios — o botão existe visualmente mas não responde, e o cursor ou feedback tátil indica que ainda não é possível avançar. Isso elimina o erro de tocar em "Entrar" sem preencher nada.
+5. Recuperação de senha
+Link abaixo do botão, não acima dos campos. A hierarquia é: tente entrar primeiro, e se não conseguir, a saída está aqui. Texto: "Esqueci minha senha" — direto, sem "Clique aqui para recuperar acesso". O usuário já sabe que vai clicar.
+6. Feedbacks obrigatórios
+Ao tocar em Entrar com campos vaziosO botão não executa. Uma mensagem aparece inline abaixo do campo vazio, não em modal, não em toast no topo. "Informe o CPF" embaixo do campo de CPF. "Informe a senha" embaixo do campo de senha. O campo ganha borda colorida para indicar o erro — mas não vermelha se vermelho for a cor da marca, porque perde o significado. Laranja ou âmbar funciona melhor como cor de alerta nesse contexto.
+
+Ao tocar em Entrar com campos preenchidosEstado de carregamento imediato e visível. O botão muda para "Entrando..." com um indicador de progresso dentro dele mesmo. O usuário sabe que o sistema recebeu o comando e está processando. Sem isso, o usuário toca duas, três vezes achando que não funcionou.
+
+Credenciais incorretasMensagem inline, clara e sem jargão técnico. Não "Erro de autenticação 401". Não "Usuário ou senha inválidos" — isso é linguagem de sistema. O correto é algo como "CPF ou senha incorretos. Tente novamente ou recupere sua senha abaixo." A mensagem fica abaixo dos campos, não em modal que o usuário precisa fechar antes de corrigir.
+
+SucessoTransição suave para a próxima tela. Sem salto abrupto. O usuário precisa perceber que avançou, não levar um susto visual. Uma animação curta de 200-300ms já resolve.
+
+
+
+
+Tela inicial
+Cabeçalho
+Só  ou "Olá, {first_name}". Abaixo, o nome do curso ativo, não o código de matrícula. Se tiver mais de uma matrícula ativa, um seletor discreto com chevron permite trocar. O código fica como informação secundária dentro desse seletor, não como título.
+
+2. Área de alertas contextuais
+Logo abaixo do cabeçalho, antes de qualquer menu. Aparece só quando há algo relevante. Exemplos de conteúdo:
+Parcela vencendo em 3 dias — com link direto para o Financeiro.Requerimento atualizado pela secretaria — com link direto para a Secretaria Digital.Aula de reposição disponível — com link direto para Minhas Disciplinas.
+Se não há nenhum alerta, essa área não aparece. Não ocupa espaço com "Nenhum registro encontrado".
+3. Atalhos prioritários
+Quatro ações, não dez. As que o aluno usa com mais frequência no cotidiano de um curso:
+Minhas Disciplinas, Financeiro, Secretaria Digital, Mensagens.
+Esses quatro ficam num grid 2x2 com ícone e label. Tamanho generoso, toque fácil. Peso visual maior que o restante.
+4. Menu secundário
+Os demais itens ficam numa seção abaixo, com label "Mais opções" ou similar, em lista simples com ícone pequeno e texto. Sem paginação, sem bolinhas, sem carrossel. O usuário rola a tela para ver tudo — scroll é natural, carrossel não é.
+Itens: Meus Dados, Meus Contratos, Portal AVA Blackboard, Declaração e Notas Fiscais, Arquivo Institucional, Central de Ajuda.
+5. Menu lateral (hamburger)
+Mantém, mas como espelho exato da tela inicial — mesma ordem, mesma nomenclatura. Sem divergência entre os dois sistemas de navegação.
+6. Feedbacks obrigatórios
+Ao trocar de matrícula no seletor, a tela atualiza com indicador de carregamento visível dentro do próprio cabeçalho. Não recarrega a tela inteira sem aviso.
+Ao tocar em qualquer ícone de menu, feedback tátil imediato e estado de loading na tela de destino antes do conteúdo carregar. O usuário não fica olhando para uma tela em branco sem saber se o toque funcionou.
+Alertas contextuais têm botão de dispensar — o aluno que já viu o aviso não precisa ser lembrado toda vez que abre o app.
+
+3. Tela Minhas Disciplinas
+1. Estrutura geral
+Lista vertical de disciplinas, uma por card. Sem abas desnecessárias no topo. Se o curso tiver módulos ou períodos, eles funcionam como seções com título separando os grupos de disciplinas dentro do scroll.
+2. Card de disciplina
+Cada card tem hierarquia clara de cima para baixo:
+Nome da disciplina em texto principal e legível, sem truncamento e sem asterisco. Abaixo, período de realização em cinza pequeno. Na linha seguinte, status com cor semântica — Aprovado em verde, Reprovado em vermelho, Em andamento em âmbar, Pendente em cinza. Nota e frequência ficam na mesma linha do status, à direita, com label acima do valor.
+O card inteiro é tocável e expande ou navega para o detalhe da disciplina. Não três botões pequenos enfileirados na base do card.
+3. Detalhe da disciplina
+Ao tocar no card, abre uma tela de detalhe com as informações completas em scroll vertical:
+Calendário de aulas em formato de lista com data, horário e status de cada encontro — presença confirmada, falta, reposição disponível. Não um botão "Calendário" que leva para outro lugar.
+Reposição disponível aparece como alerta contextual dentro do próprio detalhe da disciplina, com botão de ação direto. O aluno não precisa voltar ao menu principal para acessar.
+4. Rodapé fixo
+Dois links persistentes na base da tela: Horário das Aulas e Matriz Curricular. Esses itens existem no app atual no rodapé e fazem sentido lá — mantém, mas com visual consistente com o restante do redesign.
+5. Feedbacks obrigatórios
+Se não há disciplinas na matrícula selecionada, mensagem explicativa no lugar da lista: "Nenhuma disciplina encontrada para esta matrícula." Não tela em branco.
+Se a nota ou frequência ainda não foi lançada, o campo exibe "Não disponível" em cinza, não zero ou vazio.
+Ao acessar o calendário de uma disciplina, loading inline dentro do card antes de expandir. Não salto para tela em branco enquanto carrega.
+
+4. Tela Financeiro
+1. Estrutura geral
+Dentro uma tela com resumo financeiro claro no topo e lista de parcelas abaixo em scroll vertical.
+2. Resumo financeiro
+Três métricas em cards simples lado a lado, sem gráfico:
+Saldo em aberto em âmbar. Saldo em atraso em vermelho. Total pago em verde. Valores em real, formatados corretamente. Se todos os valores estão zerados, os cards ainda aparecem — não some a seção. O aluno precisa ver que está quite, não adivinhar.
+3. Filtros
+Quatro opções em linha abaixo do resumo: Todas, Em aberto, Pagas, Negociação. Funcionam como filtro da lista abaixo, não como abas que recarregam a tela. A opção ativa tem destaque visual claro.
+4. Lista de parcelas
+Cada item da lista tem: número da parcela e vencimento à esquerda, valor à direita, status abaixo do vencimento com cor semântica consistente com o resumo. Em atraso em vermelho, paga em verde, a vencer em âmbar, negociada em cinza.
+Parcelas em atraso aparecem no topo da lista independente do filtro selecionado. O aluno não deveria precisar procurar o que está atrasado.
+Ao tocar numa parcela, expande inline com detalhes: descrição, forma de pagamento, data de pagamento se já paga, e botão de ação se aplicável
+5. Ações
+Antecipação e Confissão de Dívida saem do topo da tela. Entram como ações contextuais:
+Antecipação aparece como botão secundário dentro do detalhe de uma parcela em aberto. Confissão de Dívida aparece como banner contextual apenas quando há parcelas em atraso, com texto explicativo curto antes do botão. Aluno sem atraso nunca vê essa opção.
+6. Feedbacks obrigatórios
+Ao gerar boleto ou segunda via, loading inline no botão antes de abrir o documento. Não redirecionamento abrupto.
+Se o pagamento foi identificado nas últimas 24 horas, badge "Pago recentemente" na parcela correspondente, com nota de que pode levar até X horas para atualizar no sistema. Elimina o aluno abrindo chamado achando que o sistema não registrou.
+Se não há parcelas no filtro selecionado, mensagem explicativa no lugar da lista. Não tela em branco.
+5. Tela Secretaria Digital
+1. Estrutura geral
+Essa tela tem dois momentos distintos: a lista de requerimentos existentes e o fluxo de abertura de um novo. São contextos diferentes e precisam ser tratados separadamente, não empilhados na mesma tela.
+2. Tela principal — lista de requerimentos
+Cabeçalho simples com título "Secretaria Digital" e botão "Novo Requerimento" destacado no canto superior direito. Esse botão é a ação principal da tela — precisa ter peso visual correspondente.
+Abaixo, dois filtros em linha: Abertos e Finalizados. Padrão ao abrir a tela é Abertos. Se não há requerimentos abertos, já mostra os finalizados automaticamente com uma nota explicativa.
+Lista de requerimentos em cards verticais com a seguinte hierarquia por card:
+Tipo do requerimento em texto principal legível — não "CEU - DECLARAÇÃO DE FREQUÊNCIA" em caixa alta, mas "Declaração de Frequência" com o curso correspondente abaixo em cinza pequeno. Data de abertura à direita do tipo. Status em cor semântica na linha seguinte — Em análise em âmbar, Deferido em verde, Indeferido em vermelho, Aguardando documento em laranja. Ao tocar no card, abre o detalhe do requerimento.
+3. Detalhe do requerimento
+Tela de detalhe em scroll vertical com três seções acessíveis por abas fixas no topo: Dados, Anexos, Interações. Essas abas existem no app atual e fazem sentido — mantém a estrutura, ajusta o visual.
+Na aba Dados: informações do requerimento preenchidas automaticamente pelo sistema. Nenhum campo que o sistema já conhece fica em branco para o aluno preencher manualmente. Matrícula, curso, turma e data entram automáticos.
+Na aba Interações: histórico cronológico de movimentações do requerimento em formato de linha do tempo vertical. Cada entrada tem data, hora, responsável pela ação e descrição do que aconteceu. O aluno sabe exatamente onde está o processo sem precisar ligar para a secretaria.
+Na aba Anexos: lista de documentos enviados e recebidos. Documentos gerados pela secretaria como declarações e certificados aparecem aqui com botão de download direto e botão de compartilhamento. Não navega para outra tela para baixar.
+4. Fluxo de novo requerimento
+Ao tocar em "Novo Requerimento" abre um fluxo em etapas, não um formulário único longo. Três etapas no máximo, com indicador de progresso visível no topo.
+Etapa 1: seleção do tipo de requerimento. Lista categorizada por assunto — Documentos e Declarações, Financeiro, Acadêmico, Outros. Dentro de cada categoria, os tipos disponíveis em lista tocável com descrição curta do que é cada um. O aluno que não sabe o nome formal do documento consegue identificar pelo que precisa fazer.
+Etapa 2: confirmação de dados. Campos preenchidos automaticamente pelo sistema — matrícula, curso, turma. Campos que o aluno precisa preencher aparecem destacados com label claro e campo vazio evidente. Se precisar anexar documento, instrução explícita do que é aceito — formato, tamanho máximo — antes do botão de upload, não depois do erro.
+Etapa 3: revisão e envio. Resumo do que será enviado em formato leitura. Botão "Confirmar e Enviar" único e centralizado. Botão "Voltar e Corrigir" abaixo em peso secundário.
+5. Feedbacks obrigatórios
+Ao enviar o requerimento, confirmação imediata na tela com número do protocolo gerado e estimativa de prazo de resposta quando o sistema tiver essa informação. Não redireciona para a lista sem avisar que deu certo.
+Requerimento com prazo se encerrando em menos de 48 horas aparece com badge de urgência na lista.
+Quando a secretaria atualiza o status de um requerimento, o aluno recebe notificação e ao abrir o app esse requerimento aparece destacado na lista — não misturado com os demais na ordem cronológica normal.
+Se o requerimento foi indeferido, o card na lista tem um resumo do motivo visível sem precisar abrir o detalhe. O aluno não descobre que foi negado só depois de tocar para ver.
+Ao baixar um documento, feedback de progresso inline no botão de download. Se o download falhar, mensagem com opção de tentar novamente — não silêncio.
+6. Tela Mensagens
+1. Ícone de notificação no cabeçalho
+O sino vive no canto superior direito do cabeçalho em todas as telas do app. Badge numérico vermelho aparece sobre ele apenas quando há mensagens não lidas. Ao tocar, abre diretamente a tela de Mensagens. Sem modal intermediário, sem preview flutuante.
+2. Estrutura geral da tela
+Título "Mensagens" no topo. Dois filtros em linha abaixo: Não lidas e Todas. Padrão ao abrir é Não lidas. Se não há mensagens não lidas, muda automaticamente para Todas com nota discreta "Nenhuma mensagem nova".
+3. Card de mensagem na lista
+Hierarquia por card de cima para baixo:
+Remetente em texto principal — não "INTEGRAÇÃO EXTERNA IPOG" mas o nome da área de origem: Secretaria Acadêmica, Coordenação, Financeiro, Sistema. Data e hora à direita do remetente. Assunto completo na linha abaixo, sem truncamento quando possível. Se truncar, corta no ponto que ainda faz sentido — nunca no meio de uma palavra. Prévia do corpo em cinza, duas linhas no máximo.
+Mensagens não lidas têm borda esquerda em âmbar e fundo levemente diferenciado. Ao ler, o estado muda visualmente sem precisar de ação manual do aluno.
+4. Tela de leitura da mensagem
+Ao tocar no card abre tela dedicada de leitura em scroll vertical.
+Cabeçalho da tela com botão de voltar à lista, título da seção "Mensagens". Abaixo, o assunto completo em texto principal. Remetente e data em cinza abaixo do assunto. Corpo da mensagem em texto corrido com tamanho legível — mínimo 16px, espaçamento generoso entre linhas.
+Se a mensagem tem anexo, ele aparece ao final do corpo como card tocável com ícone do tipo de arquivo, nome e tamanho. Botão de download inline no próprio card do anexo.
+Se a mensagem está vinculada a um requerimento ou disciplina específica, um link contextual aparece ao final: "Ver requerimento 340277" ou "Ver disciplina Excel do Básico ao Avançado". O aluno navega diretamente sem voltar ao menu principal.
+6. Feedbacks obrigatórios
+Mensagem marcada como lida automaticamente ao abrir a tela de leitura. Sem botão "marcar como lido" manual.
+Opção de marcar como não lida disponível dentro da tela de leitura para o aluno que abriu sem querer.
+Se a lista está vazia no filtro selecionado, mensagem explicativa no lugar da lista. Não tela em branco.
+Ao baixar anexo, feedback de progresso inline. Se falhar, opção de tentar novamente na mesma tela.
+
+5. Notificações push
+Quando uma mensagem nova chega, a notificação push exibe remetente e assunto completo — não "Você tem uma nova mensagem". Ao tocar na notificação, abre diretamente na tela de leitura da mensagem específica, não na tela inicial do app.
+7. Tela Meus Documentos
+1. Estrutura geral
+Repositório em scroll vertical dividido em três seções fixas. Sem abas, sem filtros complexos. O aluno rola a tela e encontra o que precisa pela categoria.
+Campo de busca no topo, discreto, para quando o volume de documentos crescer. Busca por nome do documento ou período.
+2. Seção Contratos
+Título de seção "Contratos" em texto médio com contador discreto ao lado — "Contratos (3)". Abaixo, cards em lista vertical.
+Cada card tem: nome do curso em texto principal, tipo do contrato abaixo em cinza pequeno, data de assinatura à direita, status em cor semântica — Ativo em verde, Encerrado em cinza. Dois botões inline no card: Visualizar e Compartilhar.
+Volume baixo, sem paginação necessária.
+3. Seção Notas Fiscais
+Título "Notas Fiscais" com contador. Lista cronológica reversa — mais recente no topo.
+Cada card tem: competência em texto principal como "Maio 2026", valor pago à direita em destaque, número da nota em cinza pequeno abaixo. Dois botões inline: Visualizar e Compartilhar.
+Se o volume for alto, os itens mais antigos colapsam em "Ver notas anteriores" ao final da seção, sem precisar de paginação completa.
+4. Seção Declarações
+Título "Declarações" com contador. Lista por tipo de documento, não por data.
+Cada card tem: nome da declaração em texto principal — "Declaração de Matrícula", "Declaração de Frequência", "Declaração de Conclusão de Curso", "Informe de Rendimentos IR". Curso ou turma correspondente abaixo em cinza. Data de emissão à direita. Dois botões inline: Visualizar e Compartilhar.
+Quando há mais de uma declaração do mesmo tipo — o aluno fez dois cursos e tem duas declarações de matrícula — elas aparecem agrupadas com o nome do curso diferenciando cada uma.
+5. Feedbacks obrigatórios
+Ao tocar em Visualizar, abre o documento em visualizador nativo do app ou do sistema operacional. Loading inline no botão antes de abrir. Se falhar, mensagem com opção de tentar novamente.
+Ao tocar em Compartilhar, abre o compartilhamento nativo do sistema operacional diretamente. Sem tela intermediária.
+Documento novo disponível — nota fiscal emitida após pagamento, declaração gerada pela secretaria — aparece com badge "Novo" em âmbar no card correspondente. O badge some após o aluno visualizar o documento.
+Se uma seção não tem documentos ainda, ela aparece com mensagem explicativa: "Nenhum contrato disponível" em cinza. A seção não some — o aluno sabe que a categoria existe e que está vazia, não acha que o app está quebrado.
+8. Tela Central de Ajuda
+1. Estrutura geral
+Essa tela tem dois perfis de uso distintos. O aluno que tem uma dúvida rápida e quer se autoatender. E o aluno que não achou resposta e precisa falar com alguém. A tela precisa servir os dois sem misturar os caminhos.
+Campo de busca no topo, grande e em destaque. É a primeira coisa que o aluno vê e usa. Abaixo do campo, o restante do conteúdo.
+2. Busca
+Campo com placeholder descritivo: "O que você precisa saber?" — não "Pesquisar". Resultados aparecem inline abaixo do campo conforme o aluno digita, sem precisar confirmar. Cada resultado mostra o título da pergunta e a categoria de origem. Ao tocar, abre a resposta completa.
+Se a busca não retornar resultados, a tela sugere as categorias de FAQ mais acessadas e exibe o caminho para contato humano. Não mostra só "Nenhum resultado encontrado" e para por aí.
+3. Seção FAQ
+Abaixo da busca, perguntas frequentes organizadas por categoria em seções colapsáveis. Cada categoria tem título claro em linguagem do aluno — não "Departamento Financeiro" mas "Pagamentos e Boletos". Não "Secretaria Acadêmica" mas "Documentos e Declarações".
+Categorias sugeridas baseadas no app atual: Pagamentos e Boletos, Documentos e Declarações, Aulas e Reposições, Acesso ao Sistema, Matrícula e Cancelamento.
+Cada categoria colapsada mostra as três perguntas mais acessadas visíveis sem expandir. O aluno que tem a dúvida comum resolve sem interação extra. Ao expandir a categoria, vê a lista completa.
+Cada pergunta abre a resposta inline abaixo dela, não em nova tela. O aluno mantém o contexto de onde está.
+4. Manual do Aluno
+Existe no app atual e faz sentido manter. Fica como card destacado abaixo do FAQ, não como ícone solto no topo. Título "Manual do Aluno" com descrição curta: "Guia completo sobre normas, processos e serviços do IPOG." Botão único: Acessar.
+5. Seção Fale com a Secretaria
+Última seção da tela, após o FAQ. O aluno chega aqui quando não se autoatendeu. Canais disponíveis em cards simples com ícone, nome do canal e horário de atendimento visível antes de o aluno tocar.
+WhatsApp, E-mail e Atendimento Presencial como opções. Cada card leva diretamente para a ação correspondente — WhatsApp abre o app, e-mail abre o cliente de e-mail com destinatário preenchido, presencial mostra endereço e horários em tela de detalhe.
+O WhatsApp sai do botão flutuante verde que aparece em todas as telas e passa a viver aqui como canal de suporte. Onipresente em todas as telas não é o mesmo que útil.
+6. Feedbacks obrigatórios
+Se o aluno digita na busca e não há resultados, sugere canal de contato diretamente na tela de resultado vazio. Não deixa o aluno sem saída.
+Se o canal de atendimento está fora do horário, o card indica isso claramente — "Atendimento disponível de segunda a sexta, das 8h às 18h" — antes de o aluno tentar contato e não receber resposta.
+Perguntas do FAQ têm opção de feedback simples ao final da resposta: "Isso respondeu sua dúvida?" com Sim e Não. Se Não, abre campo de texto livre e sugere o canal de contato. Esse dado alimenta a curadoria do FAQ ao longo do tempo.
+
+Tela Meus Dados (Dentro de Meu perfil)
+1.Estrutura geral
+O aluno vê tudo de uma vez e rola para o que precisa.
+Seções na ordem: Dados Pessoais, Documentos, Endereço, Contato, Dados Acadêmicos, Dados de Acesso.
+2. Cabeçalho da tela
+Foto de perfil ou avatar com iniciais. Nome completo formatado corretamente, não em caixa alta. Abaixo, matrícula ativa como informação secundária em tamanho menor. Botão de edição único e visível no canto superior direito — não um ícone rosa solto sem contexto.
+3. Seções de dados
+Cada seção tem um título em texto simples, uma linha separadora e os campos abaixo em formato label-valor.
+Label em cinza pequeno acima. Valor em texto principal abaixo. Se o campo está vazio, não deixa em branco — exibe "Não informado" em cinza. O aluno sabe que o dado não existe, não fica se perguntando se é erro de carregamento.
+Campos com dado sensível como CPF ficam parcialmente mascarados por padrão, com opção de revelar pelo mesmo ícone de olho usado na senha do login. Consistência de padrão entre telas.
+4. Modo de edição
+O botão de editar no cabeçalho ativa o modo de edição da tela inteira. Os campos editáveis mudam visualmente — ficam com borda e fundo levemente diferente, indicando que podem receber input. Campos não editáveis, como CPF, permanecem no estado de leitura com um cadeado discreto indicando que não podem ser alterados pelo aluno.
+Ao entrar no modo de edição, dois botões aparecem fixos no rodapé: "Salvar" e "Cancelar". O aluno não precisa procurar onde confirmar a alteração.
+5. Feedbacks obrigatórios
+Ao salvar, confirmação inline no topo da tela: "Dados atualizados com sucesso" em verde, que some após 3 segundos. Não modal, não redirecionamento.
+Se houver erro ao salvar, mensagem inline específica abaixo do campo com problema. Não "Erro ao salvar" genérico.
+Se o aluno tocar em "Cancelar" com alterações não salvas, uma confirmação simples: "Descartar alterações?" com opções Sim e Não. Sem isso, o aluno perde o que digitou sem querer.
+Campos obrigatórios vazios bloqueiam o salvamento e ficam destacados com indicador de erro individual, não uma mensagem única no topo listando tudo.
+
